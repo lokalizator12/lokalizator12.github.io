@@ -13,7 +13,7 @@ function getRandomElement(arr) {
     let randIndex = Math.floor(Math.random() * arr.length);
     return arr[randIndex];
 }
-
+let button1 = document.querySelector('.button1');
 let button = document.querySelector('.button');
 let phrase = document.querySelector('.phrase');
 let advice = document.querySelector('.advice');
@@ -31,8 +31,12 @@ button.addEventListener('click', function () {
     }
 });
 
+button1.addEventListener('click',function () {
+   mywin = open('https://github.com/lokalizator12');
+  });
 
 for (let i = 0; i < 3; i++) {
     smoothly(phrase, 'textContent', phrases[i].text);
     smoothly(image, 'src', phrases[i].image);
 }
+
