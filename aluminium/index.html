@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Калькулятор — алюминий, литьё</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: #f5f6f8; color: #181b22; font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; display: grid; place-items: center; padding: 20px; }
+    main { width: min(100%, 470px); background: white; border: 1px solid #e6e8ec; border-radius: 18px; padding: 28px; box-shadow: 0 10px 30px #2222; }
+    h1 { font-size: 23px; line-height: 1.2; margin: 0 0 6px; }
+    .sub { color: #777e89; margin: 0 0 25px; }
+    label { display: block; font-weight: 600; font-size: 14px; margin: 0 0 7px; }
+    input { width: 100%; border: 1px solid #d9dde5; border-radius: 10px; padding: 13px; font-size: 17px; color: #181b22; background: white; outline-offset: 1px; }
+    input:focus { outline: 2px solid #2b65dc; border-color: #2b65dc; }
+    .field { margin-bottom: 17px; }
+    .result { margin-top: 23px; padding: 19px; border-radius: 12px; background: #f3f7ff; }
+    .muted { color: #657086; font-size: 14px; }
+    .profit { font-size: 32px; line-height: 1.25; font-weight: 750; margin: 5px 0 12px; font-variant-numeric: tabular-nums; }
+    .profit.minus { color: #bd2c31; }
+    .line { display: flex; justify-content: space-between; gap: 15px; margin-top: 9px; font-size: 14px; }
+    .line strong { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    @media(max-width:420px) { main { padding: 22px 18px; } h1 { font-size: 21px; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Алюминий — литьё</h1>
+  <p class="sub">Калькулятор партии · USD</p>
+  <div class="field"><label for="tons">Вес партии, тонн</label><input id="tons" type="number" inputmode="decimal" min="0" step="any" value="25"></div>
+  <div class="field"><label for="buy">Цена закупки, $/кг</label><input id="buy" type="number" inputmode="decimal" min="0" step="any" value="1.39"></div>
+  <div class="field"><label for="sell">Цена продажи, $/кг</label><input id="sell" type="number" inputmode="decimal" min="0" step="any" value="1.88"></div>
+  <div class="field"><label for="cost">Доставка и расходы, $/кг</label><input id="cost" type="number" inputmode="decimal" min="0" step="any" value="0.30"></div>
+  <section class="result" aria-live="polite">
+    <div class="muted">Расчётная прибыль</div>
+    <div id="profit" class="profit">$4,750</div>
+    <div class="line"><span>Закупка</span><strong id="purchase">$34,750</strong></div>
+    <div class="line"><span>Расходы</span><strong id="expenses">$7,500</strong></div>
+    <div class="line"><span>Выручка</span><strong id="revenue">$47,000</strong></div>
+    <div class="line"><span>Прибыль с тонны</span><strong id="perton">$190</strong></div>
+  </section>
+</main>
+<script>
+  const $ = id => document.getElementById(id);
+  const val = id => Math.max(0, Number($(id).value) || 0);
+  const usd = n => new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', maximumFractionDigits:2}).format(n);
+  function calculate() {
+    const tons=val('tons'), purchase=tons*1000*val('buy'), expenses=tons*1000*val('cost'), revenue=tons*1000*val('sell');
+    const profit=revenue-purchase-expenses;
+    $('purchase').textContent=usd(purchase); $('expenses').textContent=usd(expenses);
+    $('revenue').textContent=usd(revenue); $('profit').textContent=usd(profit);
+    $('perton').textContent=usd(tons ? profit/tons : 0);
+    $('profit').classList.toggle('minus',profit<0);
+  }
+  document.querySelectorAll('input').forEach(input => input.addEventListener('input',calculate));
+  calculate();
+</script>
+</body>
+</html>
